@@ -8,17 +8,18 @@ from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib.auth.models import User
 
 from openedx.core.djangoapps.user_api.models import UserPreference
-from student.forms import AccountCreationForm
-from student.helpers import do_create_account
-from student.views import send_reactivation_email_for_user
-from student.models import UserProfile, CourseAccessRole, create_comments_service_user, CourseEnrollment
-from student.roles import (
+from openedx.core.djangoapps.user_authn.views.registration_form import AccountCreationForm
+from common.djangoapps.student.helpers import do_create_account
+from common.djangoapps.student.views import compose_and_send_activation_email
+from common.djangoapps.student.models import UserProfile, CourseAccessRole, create_comments_service_user, CourseEnrollment
+from common.djangoapps.student.roles import (
     CourseInstructorRole, CourseStaffRole, GlobalStaff, OrgStaffRole,
     UserBasedRole, CourseCreatorRole, CourseBetaTesterRole, OrgInstructorRole,
     LibraryUserRole, OrgLibraryUserRole
 )
-from third_party_auth.pipeline import AuthEntryError
-from openedx.core.djangoapps.user_api.accounts.utils import generate_password
+from common.djangoapps.third_party_auth.pipeline import AuthEntryError
+from openedx.core.djangoapps.user_authn.utils import generate_password
+
 from opaque_keys.edx.keys import CourseKey
 from opaque_keys import InvalidKeyError
 from collections import OrderedDict
@@ -157,7 +158,7 @@ _AUTH_ENTRY_CHOICES = frozenset([
 ])
 
 _DEFAULT_RANDOM_PASSWORD_LENGTH = 12
-_PASSWORD_CHARSET = string.letters + string.digits
+_PASSWORD_CHARSET = string.ascii_letters + string.digits
 
 class JsonResponse(HttpResponse):
     def __init__(self, data=None):
@@ -248,7 +249,8 @@ def ensure_user_information(
         if allow_inactive_user:
             pass
         elif social is not None:
-            send_reactivation_email_for_user(user)
+            # send_reactivation_email_for_user(user)
+            compose_and_send_activation_email(user)   # , profile, registration
             log.warning(
                 'User "%s" is using third_party_auth to login but has not yet activated their account. ',
                 user.username

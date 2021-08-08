@@ -49,7 +49,7 @@ class TpOauth2IntegrationTest(base.Oauth2IntegrationTest):
             auth_entry=pipeline.AUTH_ENTRY_LOGIN, redirect_uri='social:complete')
 
         strategy.request.backend.fake_user_data = mock.MagicMock(return_value=self.fake_user_data())
-        print strategy.request.backend.fake_user_data
+        print(strategy.request.backend.fake_user_data)
         strategy.request.backend.auth_complete = mock.MagicMock(return_value=self.fake_auth_complete(strategy))
         self.create_user_models_for_existing_account(
             strategy, 'user@example.com', 'password', self.get_username(), skip_social_auth=True)

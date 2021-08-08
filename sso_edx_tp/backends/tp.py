@@ -10,14 +10,14 @@ log = logging.getLogger(__name__)
 
 
 DEFAULT_AUTH_PIPELINE = (
-    'third_party_auth.pipeline.parse_query_params',
+    'common.djangoapps.third_party_auth.pipeline.parse_query_params',
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
     'social_core.pipeline.social_auth.social_user',
-    'third_party_auth.pipeline.associate_by_email_if_login_api',
+    'common.djangoapps.third_party_auth.pipeline.associate_by_email_if_login_api',
     'social_core.pipeline.user.get_username',
-    'third_party_auth.pipeline.set_pipeline_timeout',
+    'common.djangoapps.third_party_auth.pipeline.set_pipeline_timeout',
     'sso_edx_tp.common_pipeline.check_active_status',
     'sso_edx_tp.pipeline.ensure_user_information',
     'sso_edx_tp.common_pipeline.try_to_set_password',
@@ -25,8 +25,8 @@ DEFAULT_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
     'sso_edx_tp.pipeline.apply_user_preferences',
-    'third_party_auth.pipeline.set_logged_in_cookies',
-    'third_party_auth.pipeline.login_analytics',
+    'common.djangoapps.third_party_auth.pipeline.set_logged_in_cookies',
+    'common.djangoapps.third_party_auth.pipeline.login_analytics',
 )
 
 
@@ -72,7 +72,7 @@ class TpBackend(BaseOAuth2):
     def setting(self, name, default=None):
         """Return setting value from strategy"""
         try:
-            from third_party_auth.models import OAuth2ProviderConfig
+            from common.djangoapps.third_party_auth.models import OAuth2ProviderConfig
         except ImportError:
             OAuth2ProviderConfig = None
 
