@@ -208,7 +208,6 @@ def ensure_user_information(
             user.save()
             create_comments_service_user(user)
 
-            return {}
         return {'user': user}
 
     if not user:
